@@ -82,6 +82,68 @@ def read_data(cell_file):
 
     return all_cells
 
+def cell_dist(cell_a,cell_b):
+    """Find the distance between two cells
+    
+    Arguments:
+    cell_a: Object from the cell class
+    cell_b: Object from the cell class
+    
+    Returns:
+    Float, representing the distance between cell_a and cell_b
+    """
+    
+    pos_a = np.array(cell_a.pos)
+    pos_b = np.array(cell_b.pos)
+    
+    return np.linalg.norm(pos_a-pos_b)
+
+def create_graph(cell_data, time_period):
+    """Create an adjacency matrix based on a list of objects from Cell
+    
+    Arguments:
+    cell_data: List of objects from cell 
+    time_period: Which time period to take cells from 
+    
+    Returns: 
+    numpy matrix, 0-1 adjacency matrix
+    """
+    
+    cells_at_time = [i for i in cell_data if i.time == time_period] 
+    num_cells = len(cells_at_time)
+    
+    adjacency_matrix = np.zeros((num_cells,num_cells))
+    
+    for i,cell in enumerate(cells_at_time):
+        neighbors = cell.neighbors
+        baseline_energy_difference = [i for i in neighbors if i['cell_type'] == 0]
+        
+        if len(baseline_energy_difference) == 0:
+            continue
+        
+        baseline_energy_difference = baseline_energy_difference[0]['energy_difference']
+        
+        adhering_neighbors = [i for i in neighbors if i['cell_type'] == 1 and                               baseline_energy_difference-i['energy_difference']/2 > 0]
+        
+        num_neighbors = len(adhering_neighbors)
+        previous_neighbors = sum(adjacency_matrix[i])
+        num_new_neighbors = num_neighbors-previous_neighbors
+        num_new_neighbors = max(num_new_neighbors,0)
+        
+        all_distances = [(j,cell_dist(cell,cell_b)) for j,cell_b in enumerate(cells_at_time) if j != i]
+        
+        all_distances = sorted(all_distances, key=lambda k: k[1],reverse=True)
+        
+        while num_new_neighbors > 0:
+            cell_num,closest_cell = all_distances.pop()
+            
+            if adjacency_matrix[i][cell_num] == 0:
+                adjacency_matrix[i][cell_num] = 1
+                adjacency_matrix[cell_num][i] = 1
+                num_new_neighbors -= 1
+
+    return adjacency_matrix 
+
 if __name__ == "__main__":
     all_cells = read_data("data_cellcount_testing.txt")
     print(len(all_cells))
