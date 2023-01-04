@@ -144,6 +144,52 @@ def create_graph(cell_data, time_period):
 
     return adjacency_matrix 
 
+def merge_blobs(blob_list, c1, c2):
+    """merges the blobs at c1 and c2 in the blob list (updates the blob representation for all its members)
+    
+    Arguments:
+    blob_list : List[Set[Int]] contains sets that represent the blob of the cell and any given index
+    c1 : index of cell1
+    c2 : index of cell2
+    """
+    if(c2 in blob_list[c1]):
+        return
+
+    result = blob_list[c1].union(blob_list[c2])
+    for i in blob_list[c1]:
+        blob_list[i] = result
+    for i in blob_list[c2]:
+        blob_list[i] = result
+
+
+def find_blobs(adjacency_matrix):
+    """extracts blobs from adjacency matrix
+
+    Arguments
+    adjacency_matrix : np.array (2D)
+    
+    Returns
+    List of blobs represented as lists of ints: List[List[Int]]
+    """
+    blob_list = [set([i]) for i in range(len(adjacency_matrix))]
+
+    for i in range(len(adjacency_matrix)):
+        for j in range(i+1, len(adjacency_matrix)):
+            if(adjacency_matrix[i,j]):
+                merge_blobs(blob_list, i, j)
+    
+    blob_list = set([" ".join([str(i) for i in sorted(list(blob))]) for blob in blob_list])
+    blob_list = [[int(i) for i in blob.split(" ")] for blob in blob_list]
+    return blob_list
+
+def weighted_average_blobsize(blob_list):
+    n_cells = 0
+    result = 0
+    for blob in blob_list:
+        n_cells += len(blob)
+        result += len(blob)**2
+    return result/n_cells
+
 if __name__ == "__main__":
     all_cells = read_data("data_cellcount_testing.txt")
     print(len(all_cells))
