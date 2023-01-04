@@ -7,19 +7,21 @@ src_dir = os.getcwd()
 
 cpp_shell = "wsl" #whatever shell you use on your os to execute cpp 
 
-def execute_experiment(cpp_shell, config_file):
-    os.system(" ".join((cpp_shell, "./cell_evolution", config_file)))
+def execute_experiment(config_file):
+    """Run an experiment based on a config file
 
+    Arguments:
+    config_file: .par file located in the data/parameters folder
 
-#cleaning up (windows specific)
-def remove_results():
-    os.system("del data_cellcount.txt")
-    os.system("rmdir /s /q data_film2")
-    os.system("rmdir /s /q backup")
-    print("Deleted result Files")
+    Returns: Nothing
+
+    Side Effects: Runs the simulation and creates the corresponding data
+    """
+    
+    os.system("bash bash_scripts/run_simulation.sh {}".format(config_file)) 
 
 #creates experiment config
-def create_config(filepath, mcs, season_experiment, season_duration):
+def create_config(file_name, mcs, season_experiment, season_duration):    
     text = """
 mcs = {mcs}
 season_experiment = {season_experiment}
@@ -103,17 +105,16 @@ backupdir = backup
 readcolortable = false
 colortable_filename = ../data/circular.ctb    
     """.format(mcs=mcs, season_experiment=season_experiment, season_duration=season_duration)
-    os.makedirs(os.path.dirname(filepath), exist_ok=True)
-    with open(filepath, "w", newline = "\n") as f:
+    file_path = "../data/parameters/{}".format(file_name)
+    with open(file_path, "w", newline = "\n") as f:
         f.write(text)
     
+if __name__ == "__main__":
+    file_name = "basic_chemotax2.par"
+    mcs = 1000
+    season_experiment = 1
+    season_duration = 10000
 
-filepath = "../data/aaatest/testconfig.txt"
-mcs = 1000
-season_experiment=1
-season_duration = 10000
-
-create_config(filepath, mcs, season_experiment, season_duration)
-
-execute_experiment(cpp_shell, filepath)
-remove_results()
+    create_config(file_name, mcs, season_experiment, season_duration)
+    
+    execute_experiment("basic_chemotax.par")

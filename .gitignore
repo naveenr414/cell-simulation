@@ -1,3 +1,5 @@
 src/data_film2/
 src/backup/
 src/build/
+src/*.o
+src/data_cellcount.txt
