@@ -1,6 +1,6 @@
-mcs = 10
+mcs = 10000
 season_experiment = 1
-season_duration = 10000
+season_duration = 1000
 sizex = 500
 sizey = 500
 scaling_cell_to_ca_time = 10

@@ -5,3 +5,4 @@ src/*.o
 src/data_cellcount.txt
 data/output/*.txt
 scripts/data_processing/__pycache__/
+scripts/notebooks/.ipynb_checkpoints
