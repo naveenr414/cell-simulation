@@ -3,3 +3,4 @@ src/backup/
 src/build/
 src/*.o
 src/data_cellcount.txt
+data/output/*.txt
