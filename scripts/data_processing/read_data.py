@@ -26,49 +26,62 @@ class Cell:
         
         
 
-cell_count_location = "../../src/data_cellcount.txt"
+def read_data(cell_file):
+    """Read data from the cell file, located in data/output/cell_file
 
-f = open(cell_count_location).read().strip().split("\n")
-all_cells = []
+    Arguments:
+    cell_file: String representing some data_cellcount.txt file
 
-for i in f:
-    line = i.strip().split(" ")
-    cell = Cell()
-    cell.time = int(line[0])
-    cell.identifier = int(line[1])
-    cell.cell_type = int(line[2])
-    cell.pos = [float(line[3]),float(line[4])]
-    cell.persistent_migration = [float(line[5]),float(line[6])]
-    cell.chemotaxis = [float(line[7]),float(line[8])]
-    cell.time_since_birth = int(line[9])
-    cell.key = line[10]
-    cell.lock = line[11]
-    cell.mu = float(line[12])
-    cell.num_particles = int(line[13])
+    Returns: List of Cell Objects, with processed information from each line
+    """
 
-    cell.maintenance_k = {'fraction': float(line[14]),
-                          'k_0': float(line[15]),
-                          'k_A': float(line[16]),
-                          'k_P': float(line[17]),
-                          'k_C': float(line[18])}
-    cell.ext_k = {'fraction': float(line[19]),
-                  'k_0': float(line[20]),
-                  'k_A': float(line[21]),
-                  'k_P': float(line[22]),
-                  'k_C': float(line[23]),
-                  'k_0t': float(line[24]),
-                  'k_Pt': float(line[25])}
-    cell.chem_k = {'fraction': float(line[26]),
-                   'k_0': float(line[27]),
-                   'k_A': float(line[28]),
-                   'k_P': float(line[29]),
-                   'k_C': float(line[30])}
+    f = open("../data/output/{}".format(cell_file)).read().strip().split("\n")
+    all_cells = []
 
-    for i in range(31,len(line),2):
-        cell_type = int(line[i])
-        energy_difference = float(line[i+1])
-        cell.neighbors.append({'cell_type': cell_type,
-                               'energy_difference': energy_difference})
+    for i in f:
+        line = i.strip().split(" ")
+        cell = Cell()
+        cell.time = int(line[0])
+        cell.identifier = int(line[1])
+        cell.cell_type = int(line[2])
+        cell.pos = [float(line[3]),float(line[4])]
+        cell.persistent_migration = [float(line[5]),float(line[6])]
+        cell.chemotaxis = [float(line[7]),float(line[8])]
+        cell.time_since_birth = int(line[9])
+        cell.key = line[10]
+        cell.lock = line[11]
+        cell.mu = float(line[12])
+        cell.num_particles = int(line[13])
 
-    
-    all_cells.append(cell)
+        cell.maintenance_k = {'fraction': float(line[14]),
+                              'k_0': float(line[15]),
+                              'k_A': float(line[16]),
+                              'k_P': float(line[17]),
+                              'k_C': float(line[18])}
+        cell.ext_k = {'fraction': float(line[19]),
+                      'k_0': float(line[20]),
+                      'k_A': float(line[21]),
+                      'k_P': float(line[22]),
+                      'k_C': float(line[23]),
+                      'k_0t': float(line[24]),
+                      'k_Pt': float(line[25])}
+        cell.chem_k = {'fraction': float(line[26]),
+                       'k_0': float(line[27]),
+                       'k_A': float(line[28]),
+                       'k_P': float(line[29]),
+                       'k_C': float(line[30])}
+
+        for i in range(31,len(line),2):
+            cell_type = int(line[i])
+            energy_difference = float(line[i+1])
+            cell.neighbors.append({'cell_type': cell_type,
+                                   'energy_difference': energy_difference})
+
+        
+        all_cells.append(cell)
+
+    return all_cells
+
+if __name__ == "__main__":
+    all_cells = read_data("data_cellcount_testing.txt")
+    print(len(all_cells))

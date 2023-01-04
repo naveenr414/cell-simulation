@@ -1,4 +1,4 @@
-mcs = 10
+mcs = 1000
 season_experiment = 1
 season_duration = 10000
 sizex = 500
