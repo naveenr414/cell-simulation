@@ -2,7 +2,7 @@ src/data_film*/
 src/backup*/
 src/build/
 src/*.o
-src/data_cellcount.txt
+src/data_cellcount*.txt
 scripts/data_processing/__pycache__/
 scripts/notebooks/.ipynb_checkpoints
 src/output/*.txt
