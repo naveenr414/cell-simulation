@@ -1,8 +1,9 @@
-src/data_film2/
-src/backup/
+src/data_film*/
+src/backup*/
 src/build/
 src/*.o
 src/data_cellcount.txt
-data/output/*.txt
 scripts/data_processing/__pycache__/
 scripts/notebooks/.ipynb_checkpoints
+src/output/*.txt
+src/errors

@@ -1,10 +1,11 @@
 import os
 
-def execute_experiment(config_file,output_file):
+def execute_experiment(config_file,identifier):
     """Run an experiment based on a config file
 
     Arguments:
     config_file: .par file located in the data/parameters folder
+    identifier: Unique number defining the experiment
 
     Returns: Nothing
 
@@ -12,10 +13,14 @@ def execute_experiment(config_file,output_file):
     Copies the config and output file to the output folder, with the same name
     """
     
-    os.system("bash bash_scripts/run_simulation.sh {}".format(config_file))
+    output_file = "data_cellcount_{}.txt".format(identifier)
+    backup_folder = "backup_{}".format(identifier)
+    images_folder = "data_film{}".format(identifier)
+    
+    os.system("bash bash_scripts/run_simulation.sh {} {} &".format(config_file,identifier))
 
-    os.system("cp ../data/parameters/{} ../data/output/{}".format(config_file,output_file.replace(".txt",".par")))
-    os.system("cp ../src/data_cellcount.txt ../data/output/{}".format(output_file))
+    #os.system("cp ../data/parameters/{} ../data/output/{}".format(config_file,output_file.replace(".txt",".par")))
+    #os.system("cp ../src/{} ../data/output/{}".format(output_file,output_file))
 
 def create_config(file_name,data_dictionary):
     """Create a new config file based on updating parameters from a baseline parameter set
