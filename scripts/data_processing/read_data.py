@@ -190,6 +190,32 @@ def weighted_average_blobsize(blob_list):
         result += len(blob)**2
     return result/n_cells
 
+def weighted_blobsize_cells(all_cells,t):
+    """Given a list of cells, find their weighted average blob size at time t
+
+    Arguments:
+        all_cells: A list of cell objects
+        t: An integer representing the time
+
+    Returns:
+        The weighted average blob size at time t
+    """
+    
+    return weighted_average_blobsize(find_blobs(create_graph(all_cells,t)))
+    
+def num_blobs_cells(all_cells,t):
+    """Given a list of cells, find the number of blobs at time t
+
+    Arguments:
+        all_cells: A list of cell objects
+        t: An integer representing the time
+
+    Returns:
+        The number of blobs at time t
+    """
+
+    return len(find_blobs(create_graph(all_cells,t)))
+
 if __name__ == "__main__":
     all_cells = read_data("data_cellcount_testing.txt")
     print(len(all_cells))

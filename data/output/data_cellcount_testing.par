@@ -1,6 +1,6 @@
-mcs = 10
+mcs = 1000
 season_experiment = 1
-season_duration = 10000
+season_duration = 330
 sizex = 500
 sizey = 500
 scaling_cell_to_ca_time = 10
@@ -73,7 +73,7 @@ storage_stride = 1000
 graphics = false
 store = true
 datadir = data_film2
-save_text_file_period = 1000
+save_text_file_period = 10
 datafile = data_cellcount.txt
 save_backup_period = 100000
 backupdir = backup
