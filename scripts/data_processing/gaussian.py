@@ -26,6 +26,12 @@ def run_simulation_latin(parameter_space, num_samples, starting_identifier, cons
     """
     
     parameter_names = [i.name for i in parameter_space.parameters]
+    parameter_types = []
+    for parameter in parameter_space.parameters:
+        if 'Discrete' in str(type(parameter)):
+            parameter_types.append(int)
+        else:
+            parameter_types.append(float)
     
     design = LatinDesign(parameter_space) 
     X = design.get_samples(num_samples)
@@ -34,7 +40,7 @@ def run_simulation_latin(parameter_space, num_samples, starting_identifier, cons
         new_parameters = deepcopy(constant_parameters)
         
         for j,name in enumerate(parameter_names):
-            new_parameters[name] = X[i][j]
+            new_parameters[name] = parameter_types[j](X[i][j])
             
         identifier = starting_identifier+i
         config_file = "latin_{}.par".format(identifier)

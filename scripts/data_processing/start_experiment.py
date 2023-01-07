@@ -19,9 +19,6 @@ def execute_experiment(config_file,identifier):
     
     os.system("bash bash_scripts/run_simulation.sh {} {} &".format(config_file,identifier))
 
-    #os.system("cp ../data/parameters/{} ../data/output/{}".format(config_file,output_file.replace(".txt",".par")))
-    #os.system("cp ../src/{} ../data/output/{}".format(output_file,output_file))
-
 def create_config(file_name,data_dictionary):
     """Create a new config file based on updating parameters from a baseline parameter set
 
@@ -46,7 +43,10 @@ def create_config(file_name,data_dictionary):
     parameters = baseline_parameters
 
     for i in data_dictionary:
-        parameters[i] = data_dictionary[i]
+        if i == 'gamma':
+            parameters['keylock_list_filename'] = '../data/keylock/KL_same_{}.dat'.format(data_dictionary[i])
+        else:
+            parameters[i] = data_dictionary[i]
 
     w = open("../data/parameters/{}".format(file_name),"w")
     for i in parameters:
