@@ -7,3 +7,8 @@ scripts/data_processing/__pycache__/
 scripts/notebooks/.ipynb_checkpoints
 src/output/*.txt
 src/errors
+data/parameters/*.par
+!data/parameters/baseline_parameters.par
+!data/parameters/basic_chemotax.par
+data/output/*.txt
+data/output/*.par
