@@ -1,5 +1,18 @@
 import os
 
+def run_experiment_pipeline(identifier, data_dictionary):
+    """Create config file and run experiment with given file
+    
+    Arguments:
+    identifier: Unique number defining the experiment
+    data_dictionary: Dictionary, with keys being parameter names, and values being values
+
+    Side Effects: creates config file in current directory
+    """
+    config_file = "config-" + str(identifier) + ".par"
+    create_config(config_file, data_dictionary)
+    execute_experiment(config_file, identifier)
+
 def execute_experiment(config_file,identifier):
     """Run an experiment based on a config file
 
