@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from os.path import exists
 
 class Cell:
     def __init__(self):
@@ -86,8 +87,12 @@ def read_data(cell_file):
 
     Returns: List of Cell Objects, with processed information from each line
     """
-
+    
     f = open("../data/output/{}".format(cell_file)).read().strip().split("\n")
+    
+    if len(f)<=1 and f[0].strip() == '':
+        return []
+    
     all_cells = []
 
     for i in f:
@@ -133,6 +138,10 @@ def read_data(cell_file):
         all_cells.append(cell)
 
     return all_cells
+
+def get_no_data(file_names):
+    return [i for i in range(len(file_names)) if not exists("../data/output/{}".format(file_names[i]))]
+    
 
 def cell_dist(cell_a,cell_b):
     """Find the distance between two cells

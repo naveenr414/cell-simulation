@@ -10,6 +10,7 @@ from copy import deepcopy
 import matplotlib.pyplot as plt
 import numpy as np
 from data_processing.read_data import *
+from os.path import exists
 
 def run_simulation_latin(parameter_space, num_samples, starting_identifier, constant_parameters):
     """Run num_samples simulations based on parameters from a LatinDesign
@@ -64,7 +65,7 @@ def get_emukit_model(X,Y,lengthscale=1,variance=20,noise_var=1e-10):
         Emukit model based on training a GP model
     """
         
-    gpy_model = GPy.models.GPRegression(X, Y, GPy.kern.RBF(1, lengthscale=lengthscale, variance=variance), noise_var=noise_var)
+    gpy_model = GPy.models.GPRegression(X, Y, GPy.kern.RBF(X.shape[1], lengthscale=lengthscale, variance=variance), noise_var=noise_var)
     emukit_model = GPyModelWrapper(gpy_model)
     
     return emukit_model
@@ -134,6 +135,9 @@ def get_rewards(simulation_list,reward_function):
     rewards = np.empty(shape=[0, 1])
     
     for i in range(len(simulation_list)):
+        if not exists("../data/output/{}".format(simulation_list[i])):
+            continue
+            
         all_cells = read_data(simulation_list[i])
         
         rewards = np.vstack([rewards, reward_function(all_cells)])
