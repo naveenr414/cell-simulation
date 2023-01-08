@@ -24,7 +24,59 @@ class Cell:
 
         self.neighbors = []
         
+def read_parameters(parameter_file):
+    """Function to return parameters in a dictionary from a given file, located in data/parameters
+    
+    Arguments:
+        parameter_file: String for the parameter file name
         
+    Returns:
+        Dictionary representing the values of each of the parameters
+    """
+    
+    baseline_parameters = {}
+    baseline_file = "../data/parameters/{}".format(parameter_file)
+    f = open(baseline_file).read().strip().split("\n")
+
+    for line in f:
+        line = line.replace("\r\n","\n")
+        split_line = line.split(" = ")
+        baseline_parameters[split_line[0].strip()] = split_line[1].strip()
+
+    return baseline_parameters
+
+def get_parameter_array(file_names,parameter_names):
+    """Get each parameter from each parameter_file name, returned as a numpy array
+    
+    Arguments:
+        file_names: List of file name strings, with each file in data/parameters
+        parameter_names: List of parameter name strings
+        
+    Returns:
+        Numpy data array of size (len(file_names),len(parameter_names))
+    """
+    
+    parameter_array = np.zeros((len(file_names),len(parameter_names)))
+    
+    for i,file in enumerate(file_names):
+        parameters = read_parameters(file)
+        
+        for j,p in enumerate(parameter_names):
+            if p == 'gamma':
+                if 'KL_same' not in parameters['keylock_list_filename']:
+                    raise Exception("To use parameter gamma, keylock_list_filename must be in format KL_same_numbe")
+                
+                value = parameters['keylock_list_filename'].replace(".dat","")
+                value = float(value.split("_")[-1])
+            elif p in parameter_names:
+                value = float(parameters[p])
+            else:
+                raise Exception("Parameter {} not a valid parameter".format(p))
+
+            parameter_array[i][j] = value
+            
+    return parameter_array
+            
 
 def read_data(cell_file):
     """Read data from the cell file, located in data/output/cell_file
