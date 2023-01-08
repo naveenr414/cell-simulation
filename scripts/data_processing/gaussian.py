@@ -133,3 +133,25 @@ def get_rewards(simulation_list,reward_function):
         rewards = np.vstack([rewards, reward_function(all_cells)])
         
     return rewards
+
+
+if(__name__ == "__main__"):
+    """
+    run latin hypercube sampling with configuration below
+    """
+
+    parameters = [
+        DiscreteParameter("season_duration", range(100, 100001)),
+        ContinuousParameter("mut_rate", 0, 0.5),
+
+        DiscreteParameter("T", range(1, 101)),
+        DiscreteParameter("target_area", range(0, 101)),
+        ContinuousParameter("gradnoise", 0, 1),
+
+    ]
+        
+
+
+
+        
+
