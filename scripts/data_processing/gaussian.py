@@ -70,11 +70,13 @@ def get_emukit_model(X,Y,lengthscale=1,variance=20,noise_var=1e-10):
     
     return emukit_model
 
-def plot_gaussian_process(x_plot,emukit_model):
-    """Plot a Gaussian Process using matplotlib
+def plot_gaussian_process(x_plot,index,parameter_space, emukit_model):
+    """Plot a Gaussian Process using matplotlib by randomly sampling parameters, and seeing predictions
+    Currently uses a LatinDesign to sample parameters
     
     Arguments:
         x_plot: np.linspace that contains which x should be in the plot
+        index: Number from 0-len(emukit_model.X); which dimension of the input should we plot
         emukit_model: Which model contains the Gaussian Process
 
     Returns: Nothing
@@ -82,11 +84,15 @@ def plot_gaussian_process(x_plot,emukit_model):
     Side Effects: Creates matplotlib plot
     """
     
+    design = LatinDesign(parameter_space) 
+    X = design.get_samples(len(x_plot))
+    X[:,index] = x_plot
+    
     x_plot = x_plot.reshape((len(x_plot),1))
-    mu_plot, var_plot = emukit_model.predict(x_plot)
+    mu_plot, var_plot = emukit_model.predict(X)
 
     plt.figure(figsize=(12, 8))
-    plt.plot(emukit_model.X, emukit_model.Y, "ro", markersize=10, label="Observations")
+    plt.plot(emukit_model.X[:,index], emukit_model.Y, "ro", markersize=10, label="Observations")
     plt.plot(x_plot, mu_plot, "C0", label="Model")
     plt.fill_between(x_plot[:, 0],
                      mu_plot[:, 0] + np.sqrt(var_plot)[:, 0],

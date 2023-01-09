@@ -12,3 +12,4 @@ data/parameters/*.par
 !data/parameters/basic_chemotax.par
 data/output/*.txt
 data/output/*.par
+src/all_data.zip
