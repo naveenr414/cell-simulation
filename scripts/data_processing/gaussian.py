@@ -10,6 +10,7 @@ from copy import deepcopy
 import matplotlib.pyplot as plt
 import numpy as np
 from data_processing.read_data import *
+from os.path import exists
 
 def run_simulation_latin(parameter_space, num_samples, starting_identifier, constant_parameters):
     """Run num_samples simulations based on parameters from a LatinDesign
@@ -64,16 +65,18 @@ def get_emukit_model(X,Y,lengthscale=1,variance=20,noise_var=1e-10):
         Emukit model based on training a GP model
     """
         
-    gpy_model = GPy.models.GPRegression(X, Y, GPy.kern.RBF(1, lengthscale=lengthscale, variance=variance), noise_var=noise_var)
+    gpy_model = GPy.models.GPRegression(X, Y, GPy.kern.RBF(X.shape[1], lengthscale=lengthscale, variance=variance), noise_var=noise_var)
     emukit_model = GPyModelWrapper(gpy_model)
     
     return emukit_model
 
-def plot_gaussian_process(x_plot,emukit_model):
-    """Plot a Gaussian Process using matplotlib
+def plot_gaussian_process(x_plot,index,parameter_space, emukit_model):
+    """Plot a Gaussian Process using matplotlib by randomly sampling parameters, and seeing predictions
+    Currently uses a LatinDesign to sample parameters
     
     Arguments:
         x_plot: np.linspace that contains which x should be in the plot
+        index: Number from 0-len(emukit_model.X); which dimension of the input should we plot
         emukit_model: Which model contains the Gaussian Process
 
     Returns: Nothing
@@ -81,11 +84,15 @@ def plot_gaussian_process(x_plot,emukit_model):
     Side Effects: Creates matplotlib plot
     """
     
+    design = LatinDesign(parameter_space) 
+    X = design.get_samples(len(x_plot))
+    X[:,index] = x_plot
+    
     x_plot = x_plot.reshape((len(x_plot),1))
-    mu_plot, var_plot = emukit_model.predict(x_plot)
+    mu_plot, var_plot = emukit_model.predict(X)
 
     plt.figure(figsize=(12, 8))
-    plt.plot(emukit_model.X, emukit_model.Y, "ro", markersize=10, label="Observations")
+    plt.plot(emukit_model.X[:,index], emukit_model.Y, "ro", markersize=10, label="Observations")
     plt.plot(x_plot, mu_plot, "C0", label="Model")
     plt.fill_between(x_plot[:, 0],
                      mu_plot[:, 0] + np.sqrt(var_plot)[:, 0],
@@ -134,6 +141,9 @@ def get_rewards(simulation_list,reward_function):
     rewards = np.empty(shape=[0, 1])
     
     for i in range(len(simulation_list)):
+        if not exists("../data/output/{}".format(simulation_list[i])):
+            continue
+            
         all_cells = read_data(simulation_list[i])
         
         rewards = np.vstack([rewards, reward_function(all_cells)])

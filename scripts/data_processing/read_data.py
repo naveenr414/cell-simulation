@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from os.path import exists
+import itertools
 
 class Cell:
     def __init__(self):
@@ -86,8 +88,12 @@ def read_data(cell_file):
 
     Returns: List of Cell Objects, with processed information from each line
     """
-
+    
     f = open("../data/output/{}".format(cell_file)).read().strip().split("\n")
+    
+    if len(f)<=1 and f[0].strip() == '':
+        return []
+    
     all_cells = []
 
     for i in f:
@@ -133,6 +139,10 @@ def read_data(cell_file):
         all_cells.append(cell)
 
     return all_cells
+
+def get_no_data(file_names):
+    return [i for i in range(len(file_names)) if not exists("../data/output/{}".format(file_names[i]))]
+    
 
 def cell_dist(cell_a,cell_b):
     """Find the distance between two cells
@@ -267,6 +277,76 @@ def num_blobs_cells(all_cells,t):
     """
 
     return len(find_blobs(create_graph(all_cells,t)))
+
+def average_distance_between_cells(all_cells,t):
+    """Compute the average pair-wise distance between cells at time t
+    
+    Arguments:
+        all_cells: A list of cell objects
+        t: An integer represeting the time
+        
+    Returns:
+        The average distance between cells at time t
+    """
+    
+    cells_time_t = [i for i in all_cells if i.time == t]
+    
+    all_distances = []
+    
+    for cell_a, cell_b in itertools.combinations(cells_time_t,2):
+        all_distances.append(cell_dist(cell_a,cell_b))
+    
+    if len(all_distances) == 0:
+        return 0
+    
+    return np.mean(all_distances)
+    
+
+def average_function_over_time(f):
+    """Given a function that takes in a list of cells and a time t, turn it into a function
+        That finds the average of that function over all time intervals
+        
+    e.g.: num_blob_cells: Find the number of cells at time t
+    average_function_over_time(num_blob_cells): Find the average number of cells over all time periods
+    
+    Arguments:
+        f: Some function that takes in all_cells and time as a parameter
+        
+    Returns:
+        Some function that takes in only all_cells as a parameter
+    """
+    
+    def helper_function(all_cells,f):
+        if len(all_cells) == 0:
+            return 0
+
+        all_times = list(set([i.time for i in all_cells]))
+        weighted_size_over_time = [f(all_cells,i) for i in all_times]
+
+        average_weighted_size = np.mean(weighted_size_over_time)
+        return average_weighted_size
+    
+    return lambda all_cells: helper_function(all_cells,f)
+
+def function_at_last_time(f):
+    """Given a function that takes in a list of cells and a time t, turn it in to a function
+        That finds the value of that function at the last time step, t
+        
+        Arguments:
+            f: Some function that takes in all_cells and time as a parameter
+            
+        Returns:
+            Some function that takes in only all_cells as a parameter
+    """
+    
+    def helper_function(all_cells,f):
+        if len(all_cells) == 0:
+            return 0
+
+        last_time = max([i.time for i in all_cells])
+        return f(all_cells,last_time)
+    
+    return lambda all_cells: helper_function(all_cells,f)
 
 if __name__ == "__main__":
     all_cells = read_data("data_cellcount_testing.txt")
