@@ -301,6 +301,25 @@ def num_blobs_cells(all_cells,t):
 
     return len(find_blobs(create_graph(all_cells,t)))
 
+def single_cell_rate(all_cells,t):
+    """Given a list of cells, find the rate of single cells at time t
+
+    Arguments:
+        all_cells: A list of cell objects
+        t: An integer representing the time
+
+    Returns:
+        The number of blobs at time t
+    """
+    blob_list = find_blobs(create_graph(all_cells,t))
+    n_cells = 0
+    result = 0
+    for blob in blob_list:
+        n_cells += len(blob)
+        result += len(blob) == 1
+    return result/n_cells
+
+
 def average_distance_between_cells(all_cells,t):
     """Compute the average pair-wise distance between cells at time t
     
