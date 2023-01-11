@@ -161,16 +161,21 @@ def cell_dist(cell_a,cell_b):
     
     return np.linalg.norm(pos_a-pos_b)
 
+
+
 def create_graph(cell_data, time_period):
     """Create an adjacency matrix based on a list of objects from Cell
     
     Arguments:
     cell_data: List of objects from cell 
-    time_period: Which time period to take cells from 
+    time_period: Which time period to take cells from ; if -1 it creates the graph for the last time step
     
     Returns: 
     numpy matrix, 0-1 adjacency matrix
     """
+
+    if(time_period == -1):
+        time_period = max(cell_data, key=lambda x:x.time)
     
     cells_at_time = [i for i in cell_data if i.time == time_period] 
     num_cells = len(cells_at_time)
@@ -323,6 +328,25 @@ def num_blobs_cells(all_cells,t):
     """
 
     return len(find_blobs(create_graph(all_cells,t)))
+
+def single_cell_rate(all_cells,t):
+    """Given a list of cells, find the rate of single cells at time t
+
+    Arguments:
+        all_cells: A list of cell objects
+        t: An integer representing the time
+
+    Returns:
+        The number of blobs at time t
+    """
+    blob_list = find_blobs(create_graph(all_cells,t))
+    n_cells = 0
+    result = 0
+    for blob in blob_list:
+        n_cells += len(blob)
+        result += len(blob) == 1
+    return result/n_cells
+
 
 def average_distance_between_cells(all_cells,t):
     """Compute the average pair-wise distance between cells at time t
