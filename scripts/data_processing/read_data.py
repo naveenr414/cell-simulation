@@ -160,16 +160,21 @@ def cell_dist(cell_a,cell_b):
     
     return np.linalg.norm(pos_a-pos_b)
 
+
+
 def create_graph(cell_data, time_period):
     """Create an adjacency matrix based on a list of objects from Cell
     
     Arguments:
     cell_data: List of objects from cell 
-    time_period: Which time period to take cells from 
+    time_period: Which time period to take cells from ; if -1 it creates the graph for the last time step
     
     Returns: 
     numpy matrix, 0-1 adjacency matrix
     """
+
+    if(time_period == -1):
+        time_period = max(cell_data, key=lambda x:x.time)
     
     cells_at_time = [i for i in cell_data if i.time == time_period] 
     num_cells = len(cells_at_time)
