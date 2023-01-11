@@ -252,6 +252,24 @@ def weighted_average_blobsize(blob_list):
         result += len(blob)**2
     return result/n_cells
 
+
+def distance_to_peak_gradient(all_cells, t):
+    # east of the map
+    peak_gradient_pos = [250, 0]
+
+    ec_distance = np.linalg.norm(peak_gradient_pos - weighted_centre_of_mass(all_cells, t))
+    return ec_distance
+
+def weighted_centre_of_mass(all_cells, t):
+    no_cells_at_time = len([i for i in all_cells if i.time == t] )
+    
+    centre_of_mass_y = sum(_cell.pos[0] for _cell in all_cells if _cell.time == t)
+    centre_of_mass_x = sum(_cell.pos[1] for _cell in all_cells if _cell.time == t)
+
+    centre_of_mass_yx = [centre_of_mass_y, centre_of_mass_x]
+    return np.array(centre_of_mass_yx)/float(no_cells_at_time)
+
+
 def weighted_blobsize_cells(all_cells,t):
     """Given a list of cells, find their weighted average blob size at time t
 
@@ -349,5 +367,7 @@ def function_at_last_time(f):
     return lambda all_cells: helper_function(all_cells,f)
 
 if __name__ == "__main__":
-    all_cells = read_data("data_cellcount_testing.txt")
-    print(len(all_cells))
+    all_cells = read_data("data_cellcount_0.txt")
+    
+    print(all_cells[1].num_particles)
+
