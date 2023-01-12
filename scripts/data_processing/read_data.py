@@ -276,7 +276,7 @@ def vector_difference_to_peak(all_cells, t):
         return np.array(peak_gradient_pos) - np.array(cell_pos)
 
     def compute_angle_dif(v1, v2):
-        angle = np.math.atan2(np.linalg.det([v1,v2]),np.dot(v1,v2)) % (2*np.pi)
+        angle = np.abs(np.math.atan2(np.linalg.det([v1,v2]),np.dot(v1,v2)))
         return angle 
 
 
