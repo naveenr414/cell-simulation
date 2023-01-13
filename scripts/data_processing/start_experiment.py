@@ -37,8 +37,7 @@ def execute_experiment(config_file,identifier,blocking=False):
         os.system("bash bash_scripts/run_simulation.sh {} {} &".format(config_file,identifier))
 
 def create_config(file_name,data_dictionary):
-    """Create a new config file based on updating parameters from a baseline parameter set
-
+    """Create a new 
     Arguments:
     file_name: .par file which will be stored in the data/parameters folder
     data_dictionary: Dictionary, with keys being parameter names, and values being values

@@ -1,5 +1,5 @@
 mcs = 1000
-season_experiment = 1
+season_experiment = 0
 season_duration = 1000
 sizex = 500
 sizey = 500
@@ -19,7 +19,7 @@ keylock_list_filename = ../data/keylock/KL_l24_14_16_g6.dat
 Jmed_rule_input = 8o4_3_2_1_1_1
 key_lock_length = 24
 howmany_makeit_for_nextgen = 50
-popsize = 100
+popsize = 1
 n_init_cells = 100
 size_init_cells = 25
 the_line = 50
