@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from os.path import exists
 import itertools
+import math
 
 class Cell:
     def __init__(self):
@@ -256,6 +257,33 @@ def weighted_average_blobsize(blob_list):
         n_cells += len(blob)
         result += len(blob)**2
     return result/n_cells
+
+
+def average_angle_diff_to_peak(all_cells, t):
+
+    return np.mean(vector_difference_to_peak(all_cells, t))
+    
+
+def vector_difference_to_peak(all_cells, t):
+    # destination
+    peak_gradient_pos = [250, 0]
+
+    def compute_unit_v(unscaled_v):
+        return np.array(unscaled_v)/float(np.linalg.norm(unscaled_v))
+
+    def compute_vector_to_peak(cell_pos):
+        
+        return np.array(peak_gradient_pos) - np.array(cell_pos)
+
+    def compute_angle_dif(v1, v2):
+        angle = np.abs(np.math.atan2(np.linalg.det([v1,v2]),np.dot(v1,v2)))
+        return angle 
+
+
+    angles = [compute_angle_dif(compute_unit_v(_cell.chemotaxis), 
+            compute_unit_v(compute_vector_to_peak(_cell.pos))) for  _cell in all_cells if _cell.time == t]
+
+    return angles
 
 
 def distance_to_peak_gradient(all_cells, t):
