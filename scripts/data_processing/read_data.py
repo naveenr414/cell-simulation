@@ -276,7 +276,7 @@ def vector_difference_to_peak(all_cells, t):
         return np.array(peak_gradient_pos) - np.array(cell_pos)
 
     def compute_angle_dif(v1, v2):
-        angle = np.math.atan2(np.linalg.det([v1,v2]),np.dot(v1,v2)) % (2*np.pi)
+        angle = np.abs(np.math.atan2(np.linalg.det([v1,v2]),np.dot(v1,v2)))
         return angle 
 
 
@@ -347,6 +347,9 @@ def single_cell_rate(all_cells,t):
         result += len(blob) == 1
     return result/n_cells
 
+def single_cell_rate_entropy(all_cells, t):
+    p = single_cell_rate(all_cells, t)
+    return -1 * (math.log(p, 2) * p + (1-p) * math.log(1-p, 2))
 
 def average_distance_between_cells(all_cells,t):
     """Compute the average pair-wise distance between cells at time t
@@ -371,6 +374,7 @@ def average_distance_between_cells(all_cells,t):
     
     return np.mean(all_distances)
     
+
 
 def average_function_over_time(f):
     """Given a function that takes in a list of cells and a time t, turn it into a function

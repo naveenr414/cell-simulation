@@ -70,7 +70,7 @@ def get_emukit_model(X,Y,lengthscale=1,variance=20,noise_var=1e-10):
     
     return emukit_model
 
-def plot_gaussian_process(x_plot,index,parameter_space, emukit_model):
+def plot_gaussian_process(index,parameter_space, emukit_model):
     """Plot a Gaussian Process using matplotlib by randomly sampling parameters, and seeing predictions
     Currently uses a LatinDesign to sample parameters
     
@@ -84,14 +84,17 @@ def plot_gaussian_process(x_plot,index,parameter_space, emukit_model):
     Side Effects: Creates matplotlib plot
     """
     
+    x_plot = np.linspace(emukit_model.X[:,index].min(),emukit_model.X[:,index].max(),100)
+    
     design = LatinDesign(parameter_space) 
     X = design.get_samples(len(x_plot))
     X[:,index] = x_plot
     
     x_plot = x_plot.reshape((len(x_plot),1))
     mu_plot, var_plot = emukit_model.predict(X)
-
-    plt.figure(figsize=(12, 8))
+    
+    mu_plot = mu_plot.flatten().reshape((len(mu_plot),1))
+    var_plot = var_plot.flatten().reshape((len(var_plot),1))
     plt.plot(emukit_model.X[:,index], emukit_model.Y, "ro", markersize=10, label="Observations")
     plt.plot(x_plot, mu_plot, "C0", label="Model")
     plt.fill_between(x_plot[:, 0],
@@ -105,9 +108,9 @@ def plot_gaussian_process(x_plot,index,parameter_space, emukit_model):
                      mu_plot[:, 0] - 3 * np.sqrt(var_plot)[:, 0], color="C0", alpha=0.2)
     plt.xlabel(r"$x$")
     plt.ylabel(r"$f(x)$")
+    plt.xlim(min(x_plot),max(x_plot))
     plt.legend()
     plt.grid(True)
-    plt.show()
 
 def get_sobol_indices(emukit_model,parameter_space):
     """Perform sensitivity analysis by retrieving the sobol indices from an emukit model and parameter space

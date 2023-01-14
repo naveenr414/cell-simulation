@@ -1,6 +1,6 @@
 import os
 
-def run_experiment_pipeline(identifier, data_dictionary):
+def run_experiment_pipeline(identifier, data_dictionary,blocking=False):
     """Create config file and run experiment with given file
     
     Arguments:
@@ -11,14 +11,15 @@ def run_experiment_pipeline(identifier, data_dictionary):
     """
     config_file = "config-" + str(identifier) + ".par"
     create_config(config_file, data_dictionary)
-    execute_experiment(config_file, identifier)
+    execute_experiment(config_file, identifier,blocking=blocking)
 
-def execute_experiment(config_file,identifier):
+def execute_experiment(config_file,identifier,blocking=False):
     """Run an experiment based on a config file
 
     Arguments:
     config_file: .par file located in the data/parameters folder
     identifier: Unique number defining the experiment
+    blocking: Boolean that says whether to run the experiment in the background or not
 
     Returns: Nothing
 
@@ -30,11 +31,13 @@ def execute_experiment(config_file,identifier):
     backup_folder = "backup_{}".format(identifier)
     images_folder = "data_film{}".format(identifier)
     
-    os.system("bash bash_scripts/run_simulation.sh {} {} &".format(config_file,identifier))
+    if blocking:
+        os.system("bash bash_scripts/run_simulation.sh {} {}".format(config_file,identifier))
+    else:
+        os.system("bash bash_scripts/run_simulation.sh {} {} &".format(config_file,identifier))
 
 def create_config(file_name,data_dictionary):
-    """Create a new config file based on updating parameters from a baseline parameter set
-
+    """Create a new 
     Arguments:
     file_name: .par file which will be stored in the data/parameters folder
     data_dictionary: Dictionary, with keys being parameter names, and values being values
