@@ -262,9 +262,12 @@ def weighted_average_blobsize(blob_list):
 def average_angle_diff_to_peak(all_cells, t):
 
     return np.mean(vector_difference_to_peak(all_cells, t))
-    
 
-def vector_difference_to_peak(all_cells, t):
+def average_angle_migration_to_peak(all_cells, t):
+
+    return np.mean(vector_difference_to_peak(all_cells, t, "migration"))    
+
+def vector_difference_to_peak(all_cells, t, flag="chemo"):
     # destination
     peak_gradient_pos = [250, 0]
 
@@ -276,13 +279,17 @@ def vector_difference_to_peak(all_cells, t):
         return np.array(peak_gradient_pos) - np.array(cell_pos)
 
     def compute_angle_dif(v1, v2):
+        # this points to EAST
+        # angle = np.abs(np.math.atan2(np.linalg.det([v1,np.array([0., -1.])]),np.dot(v1,np.array([0.,-1.]))))
         angle = np.abs(np.math.atan2(np.linalg.det([v1,v2]),np.dot(v1,v2)))
         return angle 
 
-
-    angles = [compute_angle_dif(compute_unit_v(_cell.chemotaxis), 
+    if flag == "migration":
+        angles = [compute_angle_dif(compute_unit_v(_cell.persistent_migration), 
             compute_unit_v(compute_vector_to_peak(_cell.pos))) for  _cell in all_cells if _cell.time == t]
-
+    else:
+        angles = [compute_angle_dif(compute_unit_v(_cell.chemotaxis), 
+            compute_unit_v(compute_vector_to_peak(_cell.pos))) for  _cell in all_cells if _cell.time == t]
     return angles
 
 

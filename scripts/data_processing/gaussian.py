@@ -130,6 +130,25 @@ def get_sobol_indices(emukit_model,parameter_space):
     
     return main_effects, total_effects
 
+
+def get_timestep_rewards(simulation_f, reward_function):
+    """Get rewards from a simulation, according to some reward_function
+    
+    Arguments:
+        simulation: a file name representing the output of a single simulation
+        reward_function: Function that takes in a list of cells and returns a list of rewards
+        
+    Returns:
+        Numpy array of rewards
+    """
+    if not exists("../data/output/{}".format(simulation_f)):
+        return np.array([])
+    
+    all_cells = read_data(simulation_f)
+
+    rewards = reward_function(all_cells)
+    return np.array(rewards)
+    
 def get_rewards(simulation_list,reward_function):
     """Get rewards from a list of simulations, according to some reward_function
     
