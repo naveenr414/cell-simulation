@@ -55,7 +55,7 @@ Tutorials are provided in the form of jupyter notebooks in the /scripts/notebook
 ## Parameters
 
 *General:*
-* **mcs** : "monte carlo steps" defines the maximum time steps for the simulation; takes about 1hour per 100000 timesteps  
+* **mcs** : "monte carlo steps" defines the maximum time steps for the simulation; takes about 1hour per 100000 timesteps; ***MUST BE*** multiple of 25
 * **season_duration** : how many time steps a season lasts
 * **gridx** and **gridy** : * define the grid size (default: 500 * 500)
 * **mut_rate** : mutation rate of a single gene in the key or lock of a cell; typical key and lock size is 10 + 10, therefore, a mut_rate=0.025 leads to 20 * 0.025 = 0.5 an expected one mutation every two time steps 
@@ -63,8 +63,8 @@ Tutorials are provided in the form of jupyter notebooks in the /scripts/notebook
 * **T** : Boltzman temperature; basically says how likely things are to happen, even if they're improbable (large temperatures allow for even unlikely states to occur) 
 * **target_area** : How large each cell should aim to be
 * **lambda** : Cell stiffness; basically says how much a cell wants to get back to it's target area
-* **min_area_for_life** : Below this area, a cell will die/apoptose
-* **neighbors** : How many neighbors can a predator eat? When it's 2, it represents Moore neighborhood
+* **min_area_for_life** : Below this size, a cell will die/apoptose
+* **neighbors** : How many neighbors can a predator eat? When it's 2, it represents Moore neighborhood (default: 0)
 * **evolsim** : If 1 then the simulation terminates after a single seasons
 * **chancemediumcopied** : Chance that instead of copying pixel with another, we copy from outer space instead
 * **food_influx_location** : Where can food be; there's prespecified values for this such as specified_experiment, food_growth, everywhere, etc.
@@ -82,7 +82,7 @@ Tutorials are provided in the form of jupyter notebooks in the /scripts/notebook
 1. **howmany_makeit_for_nextgen** : How many cells make it with each generation
 2. **popsize** : Population size at each generation; if this is 100, and howmany.. Is 50, then each cell splits in two afterwards
 3. **n_init_cells** : How many cells there are initially
-4. **size_init_cells** : How large the cells are initially
+4. **size_init_cells** : How large the cells are initially (must be above 30)
 5. **the_line** : Radius of cells that make it to the next generation
 6. **rseed** : Random seed
 
