@@ -13,3 +13,4 @@ data/parameters/*.par
 data/output/*.txt
 data/output/*.par
 src/all_data.zip
+.history
