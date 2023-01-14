@@ -95,8 +95,6 @@ def plot_gaussian_process(index,parameter_space, emukit_model):
     
     mu_plot = mu_plot.flatten().reshape((len(mu_plot),1))
     var_plot = var_plot.flatten().reshape((len(var_plot),1))
-        
-    plt.figure(figsize=(12, 8))
     plt.plot(emukit_model.X[:,index], emukit_model.Y, "ro", markersize=10, label="Observations")
     plt.plot(x_plot, mu_plot, "C0", label="Model")
     plt.fill_between(x_plot[:, 0],
@@ -113,7 +111,6 @@ def plot_gaussian_process(index,parameter_space, emukit_model):
     plt.xlim(min(x_plot),max(x_plot))
     plt.legend()
     plt.grid(True)
-    plt.show()
 
 def get_sobol_indices(emukit_model,parameter_space):
     """Perform sensitivity analysis by retrieving the sobol indices from an emukit model and parameter space
